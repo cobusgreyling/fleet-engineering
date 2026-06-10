@@ -1,6 +1,10 @@
 # Fleet Engineering
 
 <p align="center">
+  <img src="assets/visuals/fleet-engineering-header.jpg" alt="Fleet Engineering — Govern populations of agents with accountability" width="100%" />
+</p>
+
+<p align="center">
   <a href="https://cobusgreyling.github.io/fleet-engineering/">
     <img src="https://img.shields.io/badge/✨_Explore_the_Showcase-Operate_populations_of_agents_with_accountability-0d1117?style=for-the-badge&labelColor=111a28&color=6366f1" alt="Explore the Showcase" />
   </a>
