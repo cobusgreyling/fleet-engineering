@@ -1,0 +1,16 @@
+{
+  "name": "@cobusgreyling/fleet-init",
+  "version": "0.1.0",
+  "description": "Scaffold fleet engineering registry, manifests, and policy files",
+  "type": "module",
+  "bin": {
+    "fleet-init": "./cli.js"
+  },
+  "files": ["cli.js", "init.js", "README.md"],
+  "scripts": {
+    "start": "node cli.js ."
+  },
+  "keywords": ["fleet-engineering", "scaffold", "ai-agents"],
+  "author": "Cobus Greyling",
+  "license": "MIT"
+}

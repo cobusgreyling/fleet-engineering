@@ -1,0 +1,126 @@
+import { readdir, readFile, stat } from 'node:fs/promises';
+import path from 'node:path';
+
+const FLEET_FILES = ['FLEET.md', 'FLEET-STATE.md', 'fleet-budget.md'];
+const MANIFEST_DIRS = ['agents/manifests', 'templates'];
+const REGISTRY_FILES = ['agents/registry.yaml', 'patterns/registry.yaml'];
+
+async function exists(p) {
+  try {
+    await stat(p);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function readSafe(p) {
+  try {
+    return await readFile(p, 'utf8');
+  } catch {
+    return '';
+  }
+}
+
+async function countManifests(root) {
+  const dir = path.join(root, 'agents/manifests');
+  if (!(await exists(dir))) return 0;
+  const entries = await readdir(dir, { withFileTypes: true });
+  return entries.filter((e) => e.isFile() && /\.ya?ml$/i.test(e.name)).length;
+}
+
+export async function auditFleet(target) {
+  const root = path.resolve(target);
+  const fleetMd = await readSafe(path.join(root, 'FLEET.md'));
+  const fleetState = await readSafe(path.join(root, 'FLEET-STATE.md'));
+  const budget = await readSafe(path.join(root, 'fleet-budget.md'));
+  const permissions = await readSafe(path.join(root, 'templates/permissions-model.yaml'))
+    + await readSafe(path.join(root, 'permissions-model.yaml'));
+  const agentsMd = await readSafe(path.join(root, 'AGENTS.md'));
+
+  const registryPresent = (
+    await Promise.all(REGISTRY_FILES.map((f) => exists(path.join(root, f))))
+  ).some(Boolean);
+
+  const manifestCount = await countManifests(root);
+  const hasTemplateManifest = await exists(path.join(root, 'templates/AGENT-MANIFEST.yaml'));
+
+  const signals = {
+    fleetMd: fleetMd.length > 100,
+    fleetState: fleetState.length > 50,
+    registry: registryPresent,
+    manifests: manifestCount > 0 || hasTemplateManifest,
+    manifestCount,
+    permissions: /clone|run|edit/i.test(permissions),
+    budget: budget.length > 50,
+    killSwitch: /kill|pause|FLEET_PAUSE/i.test(fleetMd),
+    accountability: /accountability|which agent/i.test(fleetMd + fleetState + agentsMd),
+    patterns: await exists(path.join(root, 'patterns/registry.yaml')),
+    auditWorkflow: await exists(path.join(root, '.github/workflows/audit.yml')),
+  };
+
+  let score = 10;
+  const findings = [];
+  const recommendations = [];
+
+  if (signals.fleetMd) { score += 15; findings.push({ level: 'ok', message: 'FLEET.md present' }); }
+  else findings.push({ level: 'fail', message: 'Missing FLEET.md — fleet posture undefined' });
+
+  if (signals.fleetState) { score += 12; findings.push({ level: 'ok', message: 'FLEET-STATE.md present' }); }
+  else findings.push({ level: 'warn', message: 'Missing FLEET-STATE.md — no human catalog' });
+
+  if (signals.registry) { score += 12; findings.push({ level: 'ok', message: 'Registry file found' }); }
+  else findings.push({ level: 'warn', message: 'No agents/registry.yaml or patterns/registry.yaml' });
+
+  if (signals.manifests) {
+    score += manifestCount > 0 ? 14 : 8;
+    findings.push({ level: 'ok', message: manifestCount > 0 ? `${manifestCount} agent manifest(s)` : 'AGENT-MANIFEST template present' });
+  } else findings.push({ level: 'warn', message: 'No agent manifests' });
+
+  if (signals.permissions) { score += 10; findings.push({ level: 'ok', message: 'Permissions model documented' }); }
+  else findings.push({ level: 'warn', message: 'Permissions (clone/run/edit) not documented' });
+
+  if (signals.budget) { score += 10; findings.push({ level: 'ok', message: 'Fleet budget file present' }); }
+  else findings.push({ level: 'warn', message: 'Missing fleet-budget.md' });
+
+  if (signals.killSwitch) { score += 8; findings.push({ level: 'ok', message: 'Kill switch referenced in FLEET.md' }); }
+  else findings.push({ level: 'warn', message: 'No kill switch documented' });
+
+  if (signals.accountability) { score += 10; findings.push({ level: 'ok', message: 'Accountability test referenced' }); }
+  else findings.push({ level: 'warn', message: 'Accountability test not referenced' });
+
+  if (signals.patterns) { score += 6; findings.push({ level: 'ok', message: 'Fleet patterns registry present' }); }
+  if (signals.auditWorkflow) { score += 5; findings.push({ level: 'ok', message: 'audit.yml workflow (dogfood)' }); }
+
+  let level = 'F0';
+  let assessment = 'Ad-hoc population — start with Team Agent Registry';
+  if (score >= 65) { level = 'F2'; assessment = 'Shared fleet posture — budgets and audit in place'; }
+  else if (score >= 40) { level = 'F1'; assessment = 'Cataloged — ready for inbox and budget enforcement'; }
+  else if (score >= 25) { level = 'F0+'; assessment = 'Early — add FLEET.md and registry'; }
+
+  if (!signals.fleetState) recommendations.push('cp templates/FLEET-STATE.md FLEET-STATE.md');
+  if (!signals.budget) recommendations.push('cp templates/fleet-budget.md fleet-budget.md');
+  if (manifestCount === 0) recommendations.push('node tools/fleet-init/cli.js . --pattern team-agent-registry');
+  if (!signals.permissions) recommendations.push('cp templates/permissions-model.yaml permissions-model.yaml');
+
+  return { target: root, score: Math.min(score, 100), level, assessment, signals, findings, recommendations };
+}
+
+export function formatHuman(result) {
+  const lines = [
+    `Fleet Readiness — ${result.target}`,
+    `Score: ${result.score}/100  Level: ${result.level}`,
+    `Assessment: ${result.assessment}`,
+    '',
+    'Findings:',
+  ];
+  for (const f of result.findings) {
+    const icon = f.level === 'ok' ? '✓' : f.level === 'warn' ? '!' : '✗';
+    lines.push(`  ${icon} ${f.message}`);
+  }
+  if (result.recommendations.length) {
+    lines.push('', 'Recommendations:');
+    for (const r of result.recommendations) lines.push(`  → ${r}`);
+  }
+  return lines.join('\n');
+}

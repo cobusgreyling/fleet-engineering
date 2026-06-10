@@ -1,0 +1,17 @@
+{
+  "name": "fleet-engineering",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Practical reference for fleet engineering — governing populations of AI agents",
+  "scripts": {
+    "audit": "node tools/fleet-audit/cli.js .",
+    "audit:suggest": "node tools/fleet-audit/cli.js . --suggest",
+    "init:demo": "node tools/fleet-init/cli.js /tmp/fleet-demo",
+    "validate-registry": "node scripts/validate-registry.mjs"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cobusgreyling/fleet-engineering.git"
+  }
+}

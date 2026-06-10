@@ -1,0 +1,80 @@
+# Machine-readable pattern registry for fleet-engineering
+
+patterns:
+  - id: team-agent-registry
+    name: Team Agent Registry
+    file: team-agent-registry.md
+    goal: Catalog all agents with owners, identity, and lifecycle
+    scale: 3-20 agents
+    risk: low
+    platforms: [diy, langsmith-fleet, openhermit]
+    artifacts: [FLEET-STATE.md, AGENT-MANIFEST.yaml, agents/registry.yaml]
+    concerns: [registry, identity]
+    week_one_mode: F1
+    starter: starters/minimal-fleet
+    human_gates: [new-production-agent, credential-changes]
+
+  - id: shared-inbox-hitl
+    name: Shared Inbox HITL
+    file: shared-inbox-hitl.md
+    goal: Central human approval for risky actions across agents
+    scale: 2+ active agents
+    risk: low
+    platforms: [diy, langsmith-fleet]
+    artifacts: [FLEET.md, inbox-runbook.md]
+    concerns: [choreography, sovereign-control]
+    week_one_mode: F1
+    starter: starters/minimal-fleet
+    human_gates: [destructive-tools, external-comms, prod-writes]
+
+  - id: hierarchical-delegation
+    name: Hierarchical Delegation
+    file: hierarchical-delegation.md
+    goal: Manager loop delegates to worker loops with typed handoffs
+    scale: manager + 2-8 workers
+    risk: medium
+    platforms: [diy, langgraph, langsmith-fleet]
+    artifacts: [handoff-schema.json, AGENT-MANIFEST.yaml]
+    concerns: [topology, choreography]
+    week_one_mode: F1
+    starter: starters/minimal-fleet
+    human_gates: [handoff-failures, worker-autonomy-promotion]
+
+  - id: agent-clone-fork
+    name: Agent Clone & Fork
+    file: agent-clone-fork.md
+    goal: Share good agents across teams with controlled customization
+    scale: 1 source to N clones
+    risk: low
+    platforms: [langsmith-fleet, diy]
+    artifacts: [permissions-model.yaml, fork-policy.md]
+    concerns: [registry, permissions]
+    week_one_mode: F1
+    starter: starters/minimal-fleet
+    human_gates: [clone-to-production, upstream-merge]
+
+  - id: fleet-budget-guard
+    name: Fleet Budget Guard
+    file: fleet-budget-guard.md
+    goal: Per-agent and per-team token/API caps with admission control
+    scale: any active fleet
+    risk: low
+    platforms: [diy, langsmith-fleet, openhermit]
+    artifacts: [fleet-budget.md]
+    concerns: [economics]
+    week_one_mode: F1
+    starter: starters/minimal-fleet
+    human_gates: [cap-override, budget-class-change]
+
+  - id: cross-agent-audit
+    name: Cross-Agent Audit
+    file: cross-agent-audit.md
+    goal: Incident and compliance review across agent boundaries
+    scale: compliance or multi-team
+    risk: low
+    platforms: [diy, langsmith, langsmith-fleet]
+    artifacts: [audit-runbook.md, FLEET.md]
+    concerns: [identity, sovereign-control]
+    week_one_mode: F1
+    starter: starters/minimal-fleet
+    human_gates: [retention-policy, export-requests]

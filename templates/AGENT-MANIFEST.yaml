@@ -1,0 +1,46 @@
+# Agent manifest — copy to agents/manifests/<id>.yaml
+
+id: example-agent
+owner: team-name
+version: 1.0.0
+description: One sentence — what this agent does for the organization
+
+# claw = fixed service credentials | assistant = acts on behalf of invoking user
+identity: claw
+
+# clone | run | edit — who may do what with this agent
+permissions:
+  workspace_default: run
+  editors: [team-name]
+  clone_allowed: [team-leads]
+
+# Loop patterns from loop-engineering (if applicable)
+loops:
+  - daily-triage
+
+# F0 experimental | F1 cataloged | F2 shared | F3 enterprise
+autonomy_tier: F1
+
+status: active  # active | paused | retired | experimental
+
+# Optional economics
+budget_daily_tokens: 100000
+
+# Connectors with risk class: read | write-internal | write-external | destructive
+connectors:
+  - name: github-read
+    risk: read
+  - name: linear-write
+    risk: write-external
+
+human_gates:
+  - external-comms
+  - prod-deploy
+
+# forked_from: canonical-agent@1.0.0  # if clone
+
+evidence:
+  trace_platform: langsmith  # diy | langsmith | other
+  audit_export: weekly
+
+last_reviewed: 2026-06-10

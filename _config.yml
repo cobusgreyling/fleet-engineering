@@ -1,0 +1,12 @@
+title: Fleet Engineering
+description: Practical reference for governing populations of AI agents with accountability
+theme: jekyll-theme-minimal
+baseurl: "/fleet-engineering"
+url: "https://cobusgreyling.github.io"
+
+include:
+  - CONTRIBUTING.md
+
+exclude:
+  - node_modules
+  - .gitignore

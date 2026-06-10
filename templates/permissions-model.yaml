@@ -1,0 +1,26 @@
+# Fleet permissions model — customize per organization
+
+workspace: example-workspace
+
+levels:
+  clone:
+    description: Fork agent into own copy to customize
+    typical_grantees: [team-leads, platform-admins]
+  run:
+    description: Use agent without modifying configuration
+    typical_grantees: [all-members]
+  edit:
+    description: Change instructions, tools, settings
+    typical_grantees: [agent-owner, platform-admins]
+
+defaults:
+  new_agent_workspace_permission: run
+  experimental_agents: run  # never edit for non-owners
+
+rules:
+  - id: no-edit-without-owner
+    rule: edit requires entry in manifest editors list
+  - id: clone-registers-fork
+    rule: every clone must register forked_from within 24h
+  - id: experimental-no-prod
+    rule: autonomy_tier F0 cannot use write-external connectors

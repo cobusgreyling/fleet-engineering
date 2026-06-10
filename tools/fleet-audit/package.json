@@ -1,0 +1,22 @@
+{
+  "name": "@cobusgreyling/fleet-audit",
+  "version": "0.1.0",
+  "description": "Fleet Readiness Score — audit a workspace for fleet engineering readiness (F0–F3)",
+  "type": "module",
+  "bin": {
+    "fleet-audit": "./cli.js"
+  },
+  "files": ["cli.js", "auditor.js", "README.md"],
+  "scripts": {
+    "start": "node cli.js",
+    "test": "node cli.js ../../ --json"
+  },
+  "keywords": ["fleet-engineering", "ai-agents", "governance", "audit"],
+  "author": "Cobus Greyling",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cobusgreyling/fleet-engineering.git",
+    "directory": "tools/fleet-audit"
+  }
+}
