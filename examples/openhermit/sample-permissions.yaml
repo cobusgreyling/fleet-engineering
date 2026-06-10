@@ -1,0 +1,22 @@
+# Map OpenHermit deployments to fleet permissions model
+
+workspace: openhermit-prod
+
+deployments:
+  research-hermit-3:
+    fleet_manifest: agents/manifests/research-hermit.yaml
+    hermit_pause_cmd: hermit pause research-hermit-3
+    permissions:
+      workspace_default: run
+      editors: [platform-team]
+
+levels:
+  clone:
+    description: Fork hermit deployment config
+    typical_grantees: [team-leads]
+  run:
+    description: Invoke hermit without config changes
+    typical_grantees: [all-members]
+  edit:
+    description: Change hermit deployment spec
+    typical_grantees: [platform-team]

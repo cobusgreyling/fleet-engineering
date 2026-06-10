@@ -21,7 +21,7 @@ Catalog only. No new production connectors without a manifest.
 Scaffold:
 
 ```bash
-node tools/fleet-init/dist/cli.js . --pattern team-agent-registry
+npx @cobusgreyling/fleet-init . --pattern team-agent-registry
 ```
 
 ## Manifest minimum

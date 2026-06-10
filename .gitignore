@@ -4,3 +4,5 @@ node_modules/
 .env
 .env.*
 dist/
+tools/fleet-init/starters/
+tools/fleet-init/templates/

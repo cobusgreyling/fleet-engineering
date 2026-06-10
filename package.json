@@ -1,17 +1,28 @@
 {
   "name": "fleet-engineering",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
+  "type": "module",
   "description": "Practical reference for fleet engineering — governing populations of AI agents",
   "scripts": {
     "audit": "node tools/fleet-audit/cli.js .",
     "audit:suggest": "node tools/fleet-audit/cli.js . --suggest",
-    "init:demo": "node tools/fleet-init/cli.js /tmp/fleet-demo",
-    "validate-registry": "node scripts/validate-registry.mjs"
+    "budget": "node tools/fleet-budget/cli.js .",
+    "init:demo": "node tools/fleet-init/cli.js /tmp/fleet-demo --pattern team-agent-registry",
+    "validate:registry": "node scripts/validate-registry.mjs",
+    "validate:agents": "node scripts/validate-agents.mjs",
+    "test:fleet-audit": "cd tools/fleet-audit && npm test",
+    "test:fleet-budget": "cd tools/fleet-budget && npm test",
+    "test:fixtures": "node scripts/test-fixtures.mjs",
+    "test": "npm run test:fleet-audit && npm run test:fleet-budget && npm run test:fixtures"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cobusgreyling/fleet-engineering.git"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "yaml": "^2.8.0"
   }
 }

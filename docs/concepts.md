@@ -98,6 +98,22 @@ flowchart TB
 
 See [maturity-model.md](./maturity-model.md).
 
+## Loop ↔ Fleet Maturity Bridge
+
+Fleet engineering assumes at least one stable loop. Do not run unattended L2+ loops on an F0–F1 fleet.
+
+| Loop level | Fleet level | Safe together? | Notes |
+|------------|-------------|----------------|-------|
+| L0 manual | F0 ad-hoc | Yes | Default chaos — acceptable for experiments |
+| L1 scheduled | F1 catalog | Yes | Registry + human gates on risky actions |
+| L2 unattended | F1 | **No** | Need F2 inbox + budget before unattended writes |
+| L2+ unattended | F2 | Yes | Per-agent caps, audit path, kill switch documented |
+| L3 enterprise | F3 | Yes | Policy-as-code on both layers |
+
+Promotion rule: **raise fleet tier before loop tier** when loops touch production or external systems.
+
+Starter: [starters/fleet-plus-loop](../starters/fleet-plus-loop/).
+
 ## Further Reading
 
 - [Stack](./stack.md) — full progression trail

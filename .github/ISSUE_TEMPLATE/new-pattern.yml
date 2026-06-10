@@ -1,0 +1,26 @@
+name: New fleet pattern
+description: Propose a production fleet pattern
+title: "[Pattern] "
+labels: ["pattern"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Organizational problem
+      description: What pain does this pattern solve?
+    validations:
+      required: true
+  - type: textarea
+    id: week-one
+    attributes:
+      label: Week one (F1) mode
+      description: What is explicitly out of scope in week one?
+    validations:
+      required: true
+  - type: textarea
+    id: failure-modes
+    attributes:
+      label: Failure modes
+      description: What breaks when this pattern is misapplied?
+    validations:
+      required: true

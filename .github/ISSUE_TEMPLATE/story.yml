@@ -1,0 +1,31 @@
+name: Fleet story
+description: Share a win or honest failure
+title: "[Story] "
+labels: ["story"]
+body:
+  - type: input
+    id: platform
+    attributes:
+      label: Platform
+      placeholder: DIY, LangSmith Fleet, OpenHermit, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Team size, agent count, pattern used
+    validations:
+      required: true
+  - type: textarea
+    id: worked
+    attributes:
+      label: What worked
+    validations:
+      required: true
+  - type: textarea
+    id: broke
+    attributes:
+      label: What broke
+    validations:
+      required: true

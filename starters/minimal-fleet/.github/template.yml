@@ -1,0 +1,6 @@
+name: Minimal Fleet (F1)
+description: Catalog agents with registry, permissions, budget, and CI audit
+labels:
+  - fleet-engineering
+  - f1
+  - governance

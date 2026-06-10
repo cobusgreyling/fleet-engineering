@@ -19,8 +19,20 @@ A fleet is not "many agents." A fleet is a **governed population** where every a
 <p align="center">
   <strong><a href="https://cobusgreyling.github.io/fleet-engineering/">→ cobusgreyling.github.io/fleet-engineering</a></strong>
   <br>
-  <strong><a href="https://cobusgreyling.substack.com/">→ Fleet Engineering essay on Substack (coming soon)</a></strong>
+  <strong><a href="https://cobusgreyling.substack.com/">→ Fleet Engineering essay on Substack</a></strong>
 </p>
+
+## Start here (pick your pain)
+
+| Symptom | Start with |
+|---------|------------|
+| "We have agents everywhere" | [Team Agent Registry](patterns/team-agent-registry.md) |
+| Agents act without oversight | [Shared Inbox HITL](patterns/shared-inbox-hitl.md) |
+| Token bill surprise | [Fleet Budget Guard](patterns/fleet-budget-guard.md) |
+| "Who did this?" in an incident | [Cross-Agent Audit](patterns/cross-agent-audit.md) |
+| Already have loops | [Fleet + Loop starter](starters/fleet-plus-loop/) |
+
+Unsure? Use the [Pattern Picker](docs/pattern-picker.md).
 
 ## The Stack
 
@@ -36,22 +48,45 @@ A fleet is not "many agents." A fleet is a **governed population** where every a
 | Start here | Description |
 |------------|-------------|
 | [Concepts](docs/concepts.md) | Fleet vs loop vs harness — **read this first** |
+| [Maturity Model](docs/maturity-model.md) | F0–F3 phased rollout |
 | [Five Concerns](docs/five-concerns.md) | Topology, choreography, identity, economics, sovereign control |
 | [Accountability Test](docs/accountability-test.md) | The one-sentence standard for real fleets |
 | [Pattern Picker](docs/pattern-picker.md) | Which fleet pattern to adopt first |
+| [Failure Modes](docs/failure-modes.md) | Incident-style catalog |
 | [Primitives Matrix](docs/primitives-matrix.md) | LangSmith Fleet vs DIY vs OpenHermit |
 | [Fleet Design Checklist](docs/fleet-design-checklist.md) | Ship readiness rubric (F0–F3) |
 | [Patterns](patterns/README.md) | 6 production fleet patterns |
-| [Starters](starters/) | Clone-and-run kits |
-| [fleet-audit](tools/fleet-audit/) | Fleet Readiness Score — `node tools/fleet-audit/cli.js .` |
-| [fleet-init](tools/fleet-init/) | Scaffold registry + manifests — `node tools/fleet-init/cli.js .` |
+| [Starters](starters/) | Clone-and-run kits + GitHub template |
+| [Examples](examples/) | Runnable DIY / LangSmith / OpenHermit walkthroughs |
+| [fleet-audit](tools/fleet-audit/) | `npx @cobusgreyling/fleet-audit` |
+| [fleet-init](tools/fleet-init/) | `npx @cobusgreyling/fleet-init` |
+| [fleet-budget](tools/fleet-budget/) | `npx @cobusgreyling/fleet-budget` |
 | [Stories](stories/) | Real wins and honest failures |
 
-## Why This Matters
+## Getting Started (5 minutes)
 
-Loop engineering automates *your* prompting. Fleet engineering automates *organizational* coordination — who may run what, on whose behalf, with what evidence, at what cost.
+```bash
+# 1. Scaffold a minimal fleet workspace
+npx @cobusgreyling/fleet-init ~/my-fleet --pattern team-agent-registry
 
-When agents are easy to create, the hard part shifts from building to **managing**: ownership, authentication, permissions, audit trails, and safe sharing across teams. [LangSmith Fleet](https://www.langchain.com/blog/introducing-langsmith-fleet) names this shift for enterprises. This repo defines the **open discipline** — patterns and checklists that work with any platform.
+# 2. Audit readiness
+npx @cobusgreyling/fleet-audit ~/my-fleet --suggest
+
+# 3. Roll up token caps
+npx @cobusgreyling/fleet-budget ~/my-fleet
+
+# 4. Start F1: registry + permissions doc only — no unattended autonomy
+```
+
+From a clone:
+
+```bash
+git clone https://github.com/cobusgreyling/fleet-engineering.git
+cd fleet-engineering && npm install && npm test
+node tools/fleet-init/cli.js /tmp/fleet-demo --pattern team-agent-registry
+```
+
+Phased rollout: **F0 ad-hoc → F1 catalog + inbox → F2 shared agents + budgets → F3 enterprise governance**
 
 ## The Seven Fleet Primitives
 
@@ -109,28 +144,7 @@ flowchart TB
 | [Fleet Budget Guard](patterns/fleet-budget-guard.md) | any active fleet | [minimal-fleet](starters/minimal-fleet) | **F1** caps only | Low |
 | [Cross-Agent Audit](patterns/cross-agent-audit.md) | compliance / incidents | [minimal-fleet](starters/minimal-fleet) | F1 read-only audit | Low |
 
-Not sure which to pick? See [pattern-picker](docs/pattern-picker.md).
-
 Machine-readable index: [patterns/registry.yaml](patterns/registry.yaml)
-
-## Getting Started (5 minutes)
-
-```bash
-# 1. Scaffold a minimal fleet workspace
-node tools/fleet-init/cli.js . --pattern team-agent-registry
-
-# 2. Audit readiness
-node tools/fleet-audit/cli.js . --suggest
-
-# 3. Review the accountability test
-cat docs/accountability-test.md
-
-# 4. Start F1: registry + permissions doc only — no unattended autonomy
-```
-
-Phased rollout: **F0 ad-hoc → F1 catalog + inbox → F2 shared agents + budgets → F3 enterprise governance**
-
-See [fleet-design-checklist](docs/fleet-design-checklist.md).
 
 ## Operating & Safety
 
@@ -140,17 +154,6 @@ See [fleet-design-checklist](docs/fleet-design-checklist.md).
 * [Safety](docs/safety.md) — autonomy tiers, denylist, kill switches
 * [Security](SECURITY.md) — reporting and fleet-scale automation risks
 * [Stack](docs/stack.md) — context → harness → loop → fleet trail
-
-## Caveats
-
-Fleet engineering amplifies organizational judgment — both good and bad.
-
-* **Shadow agents** multiply faster than registry updates.
-* **Shared credentials** without identity model become compliance debt.
-* **Unattended fleets** make unattended mistakes at org scale.
-* **Budget caps** without per-agent attribution hide runaway loops.
-
-Build the fleet like someone who intends to stay accountable — not just the person who enabled every agent.
 
 ## Related Repos
 

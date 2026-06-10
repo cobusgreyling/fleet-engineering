@@ -1,0 +1,14 @@
+# Example export after DIY afternoon walkthrough
+
+agents:
+  - id: weekly-report
+    manifest: agents/manifests/weekly-report.yaml
+    owner: sales-ops
+    status: active
+    pattern: team-agent-registry
+
+  - id: vendor-intake
+    manifest: agents/manifests/vendor-intake.yaml
+    owner: platform
+    status: experimental
+    pattern: team-agent-registry

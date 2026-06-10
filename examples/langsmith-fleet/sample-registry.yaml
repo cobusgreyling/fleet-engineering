@@ -1,0 +1,16 @@
+# Fictional LangSmith Fleet export normalized for git backup
+
+agents:
+  - id: vendor-intake
+    manifest: agents/manifests/vendor-intake.yaml
+    owner: platform-team
+    status: active
+    pattern: shared-inbox-hitl
+    evidence: langsmith://workspace/agents/vendor-intake
+
+  - id: sales-assistant
+    manifest: agents/manifests/sales-assistant.yaml
+    owner: sales-ops
+    status: active
+    pattern: team-agent-registry
+    evidence: langsmith://workspace/agents/sales-assistant

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fleet-handoff",
+  "title": "ManagerToWorkerHandoff",
+  "type": "object",
+  "required": ["handoff_id", "from_agent", "to_agent", "task", "authority", "evidence"],
+  "properties": {
+    "handoff_id": { "type": "string" },
+    "from_agent": { "type": "string" },
+    "to_agent": { "type": "string" },
+    "task": { "type": "string" },
+    "authority": {
+      "type": "object",
+      "required": ["principal", "scope"],
+      "properties": {
+        "principal": { "type": "string", "description": "claw or user@org" },
+        "scope": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "max_tokens": { "type": "number" },
+        "deadline": { "type": "string", "format": "date-time" },
+        "allowed_tools": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["trace_id"],
+      "properties": {
+        "trace_id": { "type": "string" },
+        "parent_run_id": { "type": "string" }
+      }
+    },
+    "status": { "enum": ["pending", "accepted", "completed", "failed", "escalated"] }
+  },
+  "additionalProperties": false
+}

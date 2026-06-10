@@ -1,0 +1,33 @@
+id: example-agent
+owner: team-name
+version: 1.0.0
+description: One sentence — what this agent does for the organization
+
+identity: claw
+
+permissions:
+  workspace_default: run
+  editors: [team-name]
+  clone_allowed: [team-leads]
+
+loops:
+  - daily-triage
+
+autonomy_tier: F1
+status: active
+
+budget_daily_tokens: 100000
+
+connectors:
+  - name: github-read
+    risk: read
+
+human_gates:
+  - external-comms
+  - prod-deploy
+
+evidence:
+  trace_platform: diy
+  audit_export: weekly
+
+last_reviewed: 2026-06-10

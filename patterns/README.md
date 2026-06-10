@@ -26,9 +26,9 @@ Machine-readable index: [registry.yaml](./registry.yaml)
 ## How to Use a Pattern
 
 1. Pick: [pattern-picker.md](../docs/pattern-picker.md)
-2. Scaffold: `node tools/fleet-init/dist/cli.js . --pattern <name>`
+2. Scaffold: `npx @cobusgreyling/fleet-init . --pattern <name>`
 3. Run week one in **F1 catalog-only** before shared autonomy
-4. Audit: `node tools/fleet-audit/dist/cli.js . --suggest`
+4. Audit: `npx @cobusgreyling/fleet-audit . --suggest`
 
 ## Adding a Pattern
 

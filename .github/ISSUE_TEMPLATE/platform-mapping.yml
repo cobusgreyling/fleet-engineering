@@ -1,0 +1,24 @@
+name: Platform mapping
+description: Map fleet primitives to a platform
+title: "[Platform] "
+labels: ["platform"]
+body:
+  - type: input
+    id: platform
+    attributes:
+      label: Platform name
+    validations:
+      required: true
+  - type: textarea
+    id: matrix
+    attributes:
+      label: Primitive mapping
+      description: Registry, identity, inbox, audit, economics, sovereign control
+    validations:
+      required: true
+  - type: textarea
+    id: week-one
+    attributes:
+      label: Week one steps
+    validations:
+      required: true

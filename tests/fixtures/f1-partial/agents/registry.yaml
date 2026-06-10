@@ -1,0 +1,4 @@
+agents:
+  - id: partial-agent
+    owner: team
+    status: active

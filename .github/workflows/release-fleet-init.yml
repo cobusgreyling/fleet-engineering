@@ -1,0 +1,27 @@
+name: Release fleet-init
+
+on:
+  push:
+    tags:
+      - 'fleet-init-v*'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  test-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Ensure npm supports trusted publishing (OIDC)
+        run: npm install -g npm@latest
+      - name: Smoke test scaffold
+        run: node tools/fleet-init/cli.js /tmp/fleet-init-smoke --pattern shared-inbox-hitl
+      - name: Publish to npm
+        working-directory: tools/fleet-init
+        run: npm publish --access public --provenance

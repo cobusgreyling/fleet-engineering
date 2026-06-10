@@ -51,12 +51,17 @@ export async function auditFleet(target) {
     registry: registryPresent,
     manifests: manifestCount > 0 || hasTemplateManifest,
     manifestCount,
+    hasTemplateManifest,
     permissions: /clone|run|edit/i.test(permissions),
     budget: budget.length > 50,
     killSwitch: /kill|pause|FLEET_PAUSE/i.test(fleetMd),
     accountability: /accountability|which agent/i.test(fleetMd + fleetState + agentsMd),
     patterns: await exists(path.join(root, 'patterns/registry.yaml')),
-    auditWorkflow: await exists(path.join(root, '.github/workflows/audit.yml')),
+    auditWorkflow: await exists(path.join(root, '.github/workflows/fleet-audit.yml'))
+      || await exists(path.join(root, '.github/workflows/audit.yml')),
+    inboxRunbook: await exists(path.join(root, 'inbox-runbook.md')),
+    auditRunbook: await exists(path.join(root, 'audit-runbook.md')),
+    handoffSchema: await exists(path.join(root, 'agents/handoff-schema.json')),
   };
 
   let score = 10;
@@ -74,7 +79,12 @@ export async function auditFleet(target) {
 
   if (signals.manifests) {
     score += manifestCount > 0 ? 14 : 8;
-    findings.push({ level: 'ok', message: manifestCount > 0 ? `${manifestCount} agent manifest(s)` : 'AGENT-MANIFEST template present' });
+    findings.push({
+      level: 'ok',
+      message: manifestCount > 0
+        ? `${manifestCount} agent manifest(s)`
+        : 'AGENT-MANIFEST template present',
+    });
   } else findings.push({ level: 'warn', message: 'No agent manifests' });
 
   if (signals.permissions) { score += 10; findings.push({ level: 'ok', message: 'Permissions model documented' }); }
@@ -90,7 +100,7 @@ export async function auditFleet(target) {
   else findings.push({ level: 'warn', message: 'Accountability test not referenced' });
 
   if (signals.patterns) { score += 6; findings.push({ level: 'ok', message: 'Fleet patterns registry present' }); }
-  if (signals.auditWorkflow) { score += 5; findings.push({ level: 'ok', message: 'audit.yml workflow (dogfood)' }); }
+  if (signals.auditWorkflow) { score += 5; findings.push({ level: 'ok', message: 'fleet-audit workflow (dogfood)' }); }
 
   let level = 'F0';
   let assessment = 'Ad-hoc population — start with Team Agent Registry';
@@ -98,10 +108,19 @@ export async function auditFleet(target) {
   else if (score >= 40) { level = 'F1'; assessment = 'Cataloged — ready for inbox and budget enforcement'; }
   else if (score >= 25) { level = 'F0+'; assessment = 'Early — add FLEET.md and registry'; }
 
+  if (!signals.fleetMd) {
+    recommendations.push('npx @cobusgreyling/fleet-init . --pattern team-agent-registry');
+  }
   if (!signals.fleetState) recommendations.push('cp templates/FLEET-STATE.md FLEET-STATE.md');
   if (!signals.budget) recommendations.push('cp templates/fleet-budget.md fleet-budget.md');
-  if (manifestCount === 0) recommendations.push('node tools/fleet-init/cli.js . --pattern team-agent-registry');
+  if (manifestCount === 0 && !hasTemplateManifest) {
+    recommendations.push('npx @cobusgreyling/fleet-init . --pattern team-agent-registry');
+  }
   if (!signals.permissions) recommendations.push('cp templates/permissions-model.yaml permissions-model.yaml');
+  if (!signals.registry) recommendations.push('Add agents/registry.yaml — see templates/AGENT-MANIFEST.yaml');
+  if (!signals.killSwitch) recommendations.push('Document kill switch in FLEET.md (FLEET_PAUSE_ALL)');
+  if (!signals.accountability) recommendations.push('See docs/accountability-test.md');
+  if (score < 40) recommendations.push('See docs/fleet-design-checklist.md');
 
   return { target: root, score: Math.min(score, 100), level, assessment, signals, findings, recommendations };
 }
@@ -123,4 +142,11 @@ export function formatHuman(result) {
     for (const r of result.recommendations) lines.push(`  → ${r}`);
   }
   return lines.join('\n');
+}
+
+export function formatSuggestions(result) {
+  if (!result.recommendations.length) {
+    return ['No scaffold actions needed — review docs/fleet-design-checklist.md for F2→F3'];
+  }
+  return [...new Set(result.recommendations)];
 }

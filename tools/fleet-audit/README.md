@@ -5,9 +5,9 @@ Fleet Readiness Score CLI — scores a workspace for fleet engineering artifacts
 ## Usage
 
 ```bash
-node tools/fleet-audit/cli.js .
-node tools/fleet-audit/cli.js . --suggest
-node tools/fleet-audit/cli.js . --json
+npx @cobusgreyling/fleet-audit .
+npx @cobusgreyling/fleet-audit . --suggest
+npx @cobusgreyling/fleet-audit . --json
 ```
 
 ## What it checks
@@ -18,3 +18,4 @@ node tools/fleet-audit/cli.js . --json
 - Permissions model
 - `fleet-budget.md`
 - Kill switch and accountability references
+- Optional: inbox/audit runbooks, handoff schema

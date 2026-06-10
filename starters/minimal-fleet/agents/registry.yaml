@@ -1,0 +1,8 @@
+# Agent registry — minimal-fleet starter
+
+agents:
+  - id: example-agent
+    manifest: agents/manifests/example-agent.yaml
+    owner: team-name
+    status: active
+    pattern: team-agent-registry

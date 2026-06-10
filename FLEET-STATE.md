@@ -12,8 +12,8 @@ Last review: 2026-06-10
 ## Human inbox (needs decision)
 
 - [ ] Publish Fleet Engineering Substack essay and link here
-- [ ] Add GitHub Pages site
-- [ ] Publish `fleet-audit` and `fleet-init` to npm
+- [x] GitHub Pages showcase live
+- [x] npm publish workflows for `fleet-audit`, `fleet-init`, `fleet-budget` (tag to release)
 
 ## Watch list
 

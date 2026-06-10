@@ -1,0 +1,28 @@
+{
+  "name": "@cobusgreyling/fleet-budget",
+  "version": "0.2.0",
+  "description": "Roll up per-agent token caps from fleet manifests",
+  "type": "module",
+  "bin": {
+    "fleet-budget": "./cli.js"
+  },
+  "files": ["cli.js", "budget.js", "README.md"],
+  "scripts": {
+    "start": "node cli.js .",
+    "test": "node --test test/budget.test.mjs"
+  },
+  "keywords": ["fleet-engineering", "ai-agents", "budget", "tokens"],
+  "author": "Cobus Greyling",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cobusgreyling/fleet-engineering.git",
+    "directory": "tools/fleet-budget"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -68,7 +68,7 @@ Walk one recent incident or agent action through the four clauses. Score:
 - Budget and kill-switch references
 
 ```bash
-node tools/fleet-audit/dist/cli.js . --suggest
+npx @cobusgreyling/fleet-audit . --suggest
 ```
 
 ## When the test is hard on purpose

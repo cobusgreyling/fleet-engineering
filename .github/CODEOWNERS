@@ -1,0 +1,6 @@
+# Fleet policy and patterns require maintainer review
+/FLEET.md @cobusgreyling
+/FLEET-STATE.md @cobusgreyling
+/patterns/ @cobusgreyling
+/schemas/ @cobusgreyling
+/tools/ @cobusgreyling

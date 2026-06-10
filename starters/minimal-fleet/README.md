@@ -1,12 +1,13 @@
 # Minimal Fleet Starter
 
-F1 starter kit: catalog + permissions + budget templates. No platform lock-in.
+F1 starter kit: catalog + permissions + budget + CI audit. No platform lock-in.
 
-## Copy or scaffold
+**Use this template:** click "Use this template" on GitHub, or scaffold locally:
 
 ```bash
-# From fleet-engineering repo root
-node tools/fleet-init/dist/cli.js /path/to/your/workspace --pattern team-agent-registry
+npx @cobusgreyling/fleet-init /path/to/your/workspace --pattern team-agent-registry
+npx @cobusgreyling/fleet-audit /path/to/your/workspace --suggest
+npx @cobusgreyling/fleet-budget /path/to/your/workspace
 ```
 
 ## What you get
@@ -14,10 +15,11 @@ node tools/fleet-init/dist/cli.js /path/to/your/workspace --pattern team-agent-r
 ```
 FLEET.md
 FLEET-STATE.md
+fleet-budget.md
+permissions-model.yaml
 agents/registry.yaml
 agents/manifests/example-agent.yaml
-templates/permissions-model.yaml   # copied to fleet root
-fleet-budget.md
+.github/workflows/fleet-audit.yml
 ```
 
 ## Week one
@@ -26,6 +28,14 @@ fleet-budget.md
 2. Run accountability test on one recent action
 3. Do **not** enable unattended L2+ loops until inbox + budget exist
 
+## Pattern variants
+
+```bash
+npx @cobusgreyling/fleet-init . --pattern shared-inbox-hitl      # adds inbox-runbook.md
+npx @cobusgreyling/fleet-init . --pattern hierarchical-delegation # adds handoff-schema.json
+npx @cobusgreyling/fleet-init . --pattern cross-agent-audit       # adds audit-runbook.md
+```
+
 ## Next patterns
 
 - [Shared Inbox HITL](../../patterns/shared-inbox-hitl.md)
@@ -33,4 +43,4 @@ fleet-budget.md
 
 ## Prerequisite
 
-Understand at least one [loop-engineering](https://github.com/cobusgreyling/loop-engineering) pattern before registering loop-backed agents.
+Understand at least one [loop-engineering](https://github.com/cobusgreyling/loop-engineering) pattern before registering loop-backed agents. See [starters/fleet-plus-loop](../fleet-plus-loop/).

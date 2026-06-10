@@ -14,7 +14,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Install root dev deps
+        run: npm install
       - name: Validate pattern registry
-        run: node scripts/validate-registry.mjs
-      - name: Fleet readiness score
-        run: node tools/fleet-audit/cli.js .
+        run: npm run validate:registry
+      - name: Validate agent manifests (reference repo)
+        run: npm run validate:agents
+      - name: Fleet readiness score (dogfood)
+        run: npm run audit:suggest
+      - name: Budget rollup (starters)
+        run: node tools/fleet-budget/cli.js starters/minimal-fleet
+      - name: Tool unit tests
+        run: npm test
+      - name: Fixture regression (f0 / f1 / starter)
+        run: |
+          node tools/fleet-audit/cli.js tests/fixtures/f0-empty --json | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8')); if(d.score>25) process.exit(1)"
+          node tools/fleet-audit/cli.js starters/minimal-fleet --json | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8')); if(d.score<55) process.exit(1)"
