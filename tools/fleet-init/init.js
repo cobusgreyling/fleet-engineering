@@ -20,6 +20,15 @@ const VALID_PATTERNS = new Set([
   'cross-agent-audit',
 ]);
 
+const VALID_LOOPS = new Set([
+  'daily-triage',
+  'pr-babysitter',
+  'issue-triage',
+  'changelog-drafter',
+  'dependency-sweeper',
+  'post-merge-cleanup',
+]);
+
 const PATTERN_EXTRAS = {
   'shared-inbox-hitl': [
     ['templates/inbox-runbook.md', 'inbox-runbook.md'],
@@ -53,11 +62,12 @@ async function copyTemplate(srcRoot, destRoot, srcRel, destRel) {
   await copyFile(path.join(srcRoot, srcRel), path.join(destRoot, destRel));
 }
 
-function applyPlaceholders(content, { team, date, pattern }) {
-  return content
-    .replace(/\{\{TEAM_NAME\}\}/g, team)
-    .replace(/\{\{DATE\}\}/g, date)
-    .replace(/\{\{PATTERN\}\}/g, pattern);
+function applyPlaceholders(content, vars) {
+  let out = content;
+  for (const [key, value] of Object.entries(vars)) {
+    out = out.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
+  }
+  return out;
 }
 
 function patchFleetMd(content, pattern) {
@@ -67,6 +77,14 @@ function patchFleetMd(content, pattern) {
     out = out.replace(`- [ ] ${flag}`, `- [x] ${flag}`);
   }
   return out;
+}
+
+function patchManifestLoops(content, loopPattern) {
+  if (!loopPattern) return content;
+  if (/^loops:/m.test(content)) {
+    return content.replace(/^loops:\s*\n(?:\s+-\s+\S+\n?)+/m, `loops:\n  - ${loopPattern}\n`);
+  }
+  return content.replace(/^status:/m, `loops:\n  - ${loopPattern}\n\nstatus:`);
 }
 
 async function resolveSrcRoot(options) {
@@ -81,15 +99,27 @@ export async function initFleet(target, options = {}) {
   const dest = path.resolve(target);
   const src = await resolveSrcRoot(options);
   const pattern = options.pattern || 'team-agent-registry';
+  const loopPattern = options.withLoop || null;
+  const loopTool = options.tool || 'grok';
   const date = new Date().toISOString().slice(0, 10);
   const team = options.team || 'your-team';
 
   if (!VALID_PATTERNS.has(pattern)) {
     throw new Error(`Unknown pattern: ${pattern}. Valid: ${[...VALID_PATTERNS].join(', ')}`);
   }
+  if (loopPattern && !VALID_LOOPS.has(loopPattern)) {
+    throw new Error(`Unknown loop: ${loopPattern}. Valid: ${[...VALID_LOOPS].join(', ')}`);
+  }
 
   await ensureDir(dest);
   const created = [];
+  const placeholders = {
+    TEAM_NAME: team,
+    DATE: date,
+    PATTERN: pattern,
+    LOOP_PATTERN: loopPattern || 'daily-triage',
+    LOOP_TOOL: loopTool,
+  };
 
   const copies = [
     ['starters/minimal-fleet/FLEET.md', 'FLEET.md'],
@@ -101,14 +131,21 @@ export async function initFleet(target, options = {}) {
     ...(PATTERN_EXTRAS[pattern] || []),
   ];
 
+  if (loopPattern) {
+    copies.push(['templates/LOOP.md', 'LOOP.md']);
+  }
+
   for (const [from, to] of copies) {
     const destPath = path.join(dest, to);
     try {
       await copyTemplate(src, dest, from, to);
       if (/\.(md|ya?ml)$/i.test(to)) {
         let content = await readFile(destPath, 'utf8');
-        content = applyPlaceholders(content, { team, date, pattern });
+        content = applyPlaceholders(content, placeholders);
         if (to === 'FLEET.md') content = patchFleetMd(content, pattern);
+        if (to === 'agents/manifests/example-agent.yaml' && loopPattern) {
+          content = patchManifestLoops(content, loopPattern);
+        }
         await writeFile(destPath, content);
       }
       created.push(to);
@@ -119,7 +156,7 @@ export async function initFleet(target, options = {}) {
   }
 
   const registry = `# Agent registry — ${date}
-# Pattern: ${pattern}
+# Pattern: ${pattern}${loopPattern ? ` + loop: ${loopPattern}` : ''}
 
 agents:
   - id: example-agent
@@ -132,5 +169,9 @@ agents:
   await writeFile(path.join(dest, 'agents/registry.yaml'), registry);
   created.push('agents/registry.yaml');
 
-  return { dest, pattern, created };
+  const next = loopPattern
+    ? 'npx @cobusgreyling/loop-init . --pattern ' + loopPattern + ' --tool ' + loopTool
+    : 'npx @cobusgreyling/fleet-audit <path> --suggest';
+
+  return { dest, pattern, loopPattern, loopTool, created, next };
 }

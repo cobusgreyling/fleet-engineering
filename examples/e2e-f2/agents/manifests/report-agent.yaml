@@ -1,0 +1,26 @@
+id: report-agent
+owner: analytics
+version: 1.0.0
+description: Weekly metrics report for leadership
+
+identity: assistant
+
+permissions:
+  workspace_default: run
+  editors: [analytics]
+
+loops: []
+
+autonomy_tier: F2
+status: active
+
+budget_daily_tokens: 80000
+
+human_gates:
+  - external-comms
+
+evidence:
+  trace_platform: langsmith
+  audit_export: weekly
+
+last_reviewed: 2026-06-18

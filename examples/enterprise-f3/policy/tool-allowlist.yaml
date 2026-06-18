@@ -1,0 +1,23 @@
+# Policy-as-code: connector allowlist by data class
+
+data_classes:
+  public:
+    allowed_risks: [read]
+  internal:
+    allowed_risks: [read, write-internal]
+  confidential:
+    allowed_risks: [read]
+    requires_inbox: [write-external, destructive]
+
+denylist:
+  connectors:
+    - prod-database-write
+    - payment-api
+  unless_inbox_approved: true
+
+agents:
+  default:
+    max_autonomy_tier: F2
+  enterprise-reporting:
+    max_autonomy_tier: F3
+    allowed_connectors: [github-read, slack-read]

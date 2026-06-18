@@ -1,0 +1,30 @@
+id: audit-workflow
+owner: maintainers
+version: 1.0.0
+description: CI fleet-audit + registry validation on every push/PR
+
+identity: claw
+
+permissions:
+  workspace_default: run
+  editors: [maintainers]
+
+loops: []
+
+autonomy_tier: F1
+status: active
+
+budget_daily_tokens: 0
+
+connectors:
+  - name: github-read
+    risk: read
+
+human_gates:
+  - workflow-permission-changes
+
+evidence:
+  trace_platform: diy
+  audit_export: .github/workflows/audit.yml
+
+last_reviewed: 2026-06-18

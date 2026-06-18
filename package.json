@@ -1,20 +1,26 @@
 {
   "name": "fleet-engineering",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "Practical reference for fleet engineering — governing populations of AI agents",
   "scripts": {
     "audit": "node tools/fleet-audit/cli.js .",
     "audit:suggest": "node tools/fleet-audit/cli.js . --suggest",
+    "audit:gate": "node tools/fleet-audit/cli.js . --min-score=55",
     "budget": "node tools/fleet-budget/cli.js .",
-    "init:demo": "node tools/fleet-init/cli.js /tmp/fleet-demo --pattern team-agent-registry",
+    "cost": "node tools/fleet-cost/cli.js .",
+    "init:demo": "node tools/fleet-init/cli.js /tmp/fleet-demo --pattern team-agent-registry --with-loop daily-triage",
     "validate:registry": "node scripts/validate-registry.mjs",
     "validate:agents": "node scripts/validate-agents.mjs",
-    "test:fleet-audit": "cd tools/fleet-audit && npm test",
+    "test:fleet-audit": "cd tools/fleet-audit && npm install && npm test",
     "test:fleet-budget": "cd tools/fleet-budget && npm test",
+    "test:fleet-cost": "cd tools/fleet-cost && npm test",
     "test:fixtures": "node scripts/test-fixtures.mjs",
-    "test": "npm run test:fleet-audit && npm run test:fleet-budget && npm run test:fixtures"
+    "test:examples": "node tools/fleet-audit/cli.js examples/e2e-f2 --min-score=55",
+    "demo:diy": "bash examples/diy/demo.sh",
+    "bundle:init": "node scripts/bundle-fleet-init.mjs",
+    "test": "npm run test:fleet-audit && npm run test:fleet-budget && npm run test:fleet-cost && npm run test:fixtures && npm run test:examples"
   },
   "license": "MIT",
   "repository": {

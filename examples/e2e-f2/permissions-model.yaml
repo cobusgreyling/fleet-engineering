@@ -1,0 +1,10 @@
+levels:
+  clone:
+    description: Copy agent config to another team
+    default: team-leads
+  run:
+    description: Invoke agent on behalf of workspace
+    default: all-members
+  edit:
+    description: Change agent manifest or connectors
+    default: owners

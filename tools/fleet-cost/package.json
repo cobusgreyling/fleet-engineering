@@ -1,0 +1,29 @@
+{
+  "name": "@cobusgreyling/fleet-cost",
+  "version": "0.1.0",
+  "description": "Attribute token spend per fleet agent from run logs or loop estimates",
+  "type": "module",
+  "bin": {
+    "fleet-cost": "./cli.js"
+  },
+  "files": ["cli.js", "cost.js", "README.md"],
+  "scripts": {
+    "start": "node cli.js .",
+    "test": "node --test test/cost.test.mjs"
+  },
+  "keywords": ["fleet-engineering", "ai-agents", "cost", "tokens"],
+  "author": "Cobus Greyling",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cobusgreyling/fleet-engineering.git",
+    "directory": "tools/fleet-cost"
+  },
+  "homepage": "https://cobusgreyling.github.io/fleet-engineering/",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

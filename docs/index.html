@@ -14,6 +14,7 @@ title: Fleet Engineering — Showcase
   <meta property="og:image" content="https://raw.githubusercontent.com/cobusgreyling/fleet-engineering/main/assets/visuals/fe.png">
   <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/showcase.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛵</text></svg>">
+  <script defer src="{{ site.baseurl }}/assets/js/pattern-picker.js"></script>
 </head>
 <body>
 
@@ -33,7 +34,7 @@ title: Fleet Engineering — Showcase
 </nav>
 
 <header class="hero wrap">
-  <div class="badge">Open source · npx CLIs · F2 dogfood · 6 patterns · 5 stories</div>
+  <div class="badge">Open source · npx CLIs · F2 dogfood · 6 patterns · 5 stories · <a href="https://cobusgreyling.substack.com/">Essay</a></div>
   <h1>Govern populations<br>of agents with accountability</h1>
   <p class="lead">
     Fleet engineering is the layer above loop engineering: registry, identity, permissions,
@@ -81,6 +82,13 @@ title: Fleet Engineering — Showcase
       <p>How do many systems govern together?</p>
     </a>
   </div>
+</section>
+
+<section id="picker" class="wrap">
+  <p class="section-label">Interactive</p>
+  <h2 class="section-title">Pattern picker</h2>
+  <p class="section-desc">What hurts right now? Pick a symptom — get the pattern, starter, and command.</p>
+  <div id="pattern-picker" class="picker"></div>
 </section>
 
 <section id="patterns" class="wrap">
@@ -138,9 +146,22 @@ title: Fleet Engineering — Showcase
 <section id="start" class="wrap">
   <p class="section-label">Get started</p>
   <h2 class="section-title">Five minutes to F1</h2>
-  <pre class="code-block"><code>npx @cobusgreyling/fleet-init ~/my-fleet --pattern team-agent-registry
+  <pre class="code-block"><code>npx @cobusgreyling/fleet-init ~/my-fleet --pattern team-agent-registry --with-loop daily-triage
 npx @cobusgreyling/fleet-audit ~/my-fleet --suggest
-npx @cobusgreyling/fleet-budget ~/my-fleet</code></pre>
+npx @cobusgreyling/fleet-budget ~/my-fleet
+npx @cobusgreyling/fleet-cost ~/my-fleet</code></pre>
+  <details class="audit-sample" style="margin-top:1rem;">
+    <summary>Sample fleet-audit output (F1 workspace)</summary>
+    <pre class="code-block"><code>Fleet Readiness — ~/my-fleet
+Score: 55/100  Level: F1
+Assessment: Cataloged — ready for inbox and budget enforcement
+
+Findings:
+  ✓ FLEET.md present
+  ✓ Registry file found
+  ✓ 1 agent manifest(s)
+  ✓ Permissions model documented</code></pre>
+  </details>
   <p class="section-desc" style="margin-top:1rem;">
     <a href="https://github.com/cobusgreyling/fleet-engineering/blob/main/docs/pattern-picker.md">Pattern picker</a> ·
     <a href="https://github.com/cobusgreyling/fleet-engineering/tree/main/starters/minimal-fleet">Use minimal-fleet template</a> ·

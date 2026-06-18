@@ -1,0 +1,28 @@
+name: Release fleet-cost
+
+on:
+  push:
+    tags:
+      - 'fleet-cost-v*'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  test-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Ensure npm supports trusted publishing (OIDC)
+        run: npm install -g npm@latest
+      - name: Test
+        working-directory: tools/fleet-cost
+        run: npm test
+      - name: Publish to npm
+        working-directory: tools/fleet-cost
+        run: npm publish --access public --provenance

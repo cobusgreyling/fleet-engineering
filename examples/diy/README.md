@@ -2,6 +2,12 @@
 
 End-to-end walkthrough using only git-backed artifacts. No platform required.
 
+**Runnable demo:**
+
+```bash
+bash examples/diy/demo.sh
+```
+
 ## Before (empty workspace)
 
 ```bash

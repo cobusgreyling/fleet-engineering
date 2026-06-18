@@ -1,15 +1,15 @@
-# Reference repo automations — not LLM agents, but fleet-accountable workflows
+# Reference repo automations — fleet-accountable workflows (not LLM agents)
 
 agents:
   - id: audit-workflow
-    manifest: null
+    manifest: agents/manifests/audit-workflow.yaml
     owner: maintainers
     status: active
     evidence: .github/workflows/audit.yml
     description: CI fleet-audit + registry validation
 
   - id: validate-registry
-    manifest: null
+    manifest: agents/manifests/validate-registry.yaml
     owner: maintainers
     status: active
     evidence: scripts/validate-registry.mjs

@@ -7,7 +7,7 @@ Thank you for helping build the open reference for fleet engineering.
 - Production fleet patterns with honest failure modes
 - Platform mappings (LangSmith Fleet, DIY, self-hosted)
 - Stories — wins and postmortems with accountability scores
-- Improvements to `fleet-audit` scoring and schemas
+- Improvements to `fleet-audit`, `fleet-cost` scoring and schemas
 
 ## Local setup
 
@@ -25,6 +25,7 @@ npm run audit:suggest
 2. Update `patterns/registry.yaml`
 3. Link from `docs/pattern-picker.md` if user-facing
 4. Add pattern extras to `tools/fleet-init/init.js` if scaffold artifacts apply
+5. If loop integration applies, test `--with-loop` alignment with `fleet-audit`
 
 ## Schema changes
 

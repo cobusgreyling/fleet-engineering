@@ -2,11 +2,10 @@
 
 Bridge kit: one agent with matched **loop** (L1) and **fleet** (F1) artifacts.
 
-## Scaffold
+## Scaffold (one command)
 
 ```bash
-npx @cobusgreyling/fleet-init . --pattern team-agent-registry
-# Then add loop layer from loop-engineering:
+npx @cobusgreyling/fleet-init . --pattern team-agent-registry --with-loop daily-triage --tool grok
 npx @cobusgreyling/loop-init . --pattern daily-triage --tool grok
 ```
 
@@ -17,6 +16,8 @@ npx @cobusgreyling/loop-init . --pattern daily-triage --tool grok
 | Fleet | `agents/manifests/example-agent.yaml` | `id: example-agent` |
 | Fleet | `agents/manifests/example-agent.yaml` | `loops: [daily-triage]` |
 | Loop | `LOOP.md` | pattern `daily-triage` |
+
+`fleet-audit` warns if manifest `loops:` are not referenced in `LOOP.md`.
 
 ## Safe together?
 

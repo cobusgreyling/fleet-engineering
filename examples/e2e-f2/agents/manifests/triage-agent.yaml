@@ -1,0 +1,24 @@
+id: triage-agent
+owner: platform
+version: 1.0.0
+description: Daily triage across CI and issues
+
+identity: claw
+
+permissions:
+  workspace_default: run
+  editors: [platform]
+
+loops:
+  - daily-triage
+
+autonomy_tier: F2
+status: active
+
+budget_daily_tokens: 150000
+
+evidence:
+  trace_platform: diy
+  audit_export: fleet-run-log.jsonl
+
+last_reviewed: 2026-06-18

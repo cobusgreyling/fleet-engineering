@@ -41,6 +41,23 @@ test('formatSuggestions: healthy repo has no init spam', async () => {
   await rm(root, { recursive: true, force: true });
 });
 
+test('auditFleet: shadow agent lowers score', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'fleet-audit-'));
+  await scaffoldF1(root);
+  await writeFile(path.join(root, 'agents/manifests/shadow.yaml'), `id: shadow-bot
+owner: unknown
+version: 1.0.0
+identity: claw
+autonomy_tier: F1
+status: active
+permissions:
+  workspace_default: run
+`);
+  const result = await auditFleet(root);
+  assert.ok(result.findings.some((f) => f.message.includes('Shadow agent')));
+  await rm(root, { recursive: true, force: true });
+});
+
 test('auditFleet: reference-style repo with template manifest scores high', async () => {
   const root = await mkdtemp(path.join(tmpdir(), 'fleet-audit-'));
   await writeFile(path.join(root, 'FLEET.md'), '# FLEET\nKill FLEET_PAUSE_ALL. Accountability which agent.\n'.repeat(8));

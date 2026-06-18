@@ -1,8 +1,7 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
+import { validateFleetAgents, detectLoopAlignment } from './validate.js';
 
-const FLEET_FILES = ['FLEET.md', 'FLEET-STATE.md', 'fleet-budget.md'];
-const MANIFEST_DIRS = ['agents/manifests', 'templates'];
 const REGISTRY_FILES = ['agents/registry.yaml', 'patterns/registry.yaml'];
 
 async function exists(p) {
@@ -34,6 +33,7 @@ export async function auditFleet(target) {
   const fleetMd = await readSafe(path.join(root, 'FLEET.md'));
   const fleetState = await readSafe(path.join(root, 'FLEET-STATE.md'));
   const budget = await readSafe(path.join(root, 'fleet-budget.md'));
+  const loopMd = await readSafe(path.join(root, 'LOOP.md'));
   const permissions = await readSafe(path.join(root, 'templates/permissions-model.yaml'))
     + await readSafe(path.join(root, 'permissions-model.yaml'));
   const agentsMd = await readSafe(path.join(root, 'AGENTS.md'));
@@ -44,6 +44,8 @@ export async function auditFleet(target) {
 
   const manifestCount = await countManifests(root);
   const hasTemplateManifest = await exists(path.join(root, 'templates/AGENT-MANIFEST.yaml'));
+  const validation = await validateFleetAgents(root);
+  const loopIssues = detectLoopAlignment(loopMd, validation.loopsByAgent);
 
   const signals = {
     fleetMd: fleetMd.length > 100,
@@ -52,7 +54,7 @@ export async function auditFleet(target) {
     manifests: manifestCount > 0 || hasTemplateManifest,
     manifestCount,
     hasTemplateManifest,
-    permissions: /clone|run|edit/i.test(permissions),
+    permissions: /clone|run|edit/i.test(permissions) && validation.permissionsOk,
     budget: budget.length > 50,
     killSwitch: /kill|pause|FLEET_PAUSE/i.test(fleetMd),
     accountability: /accountability|which agent/i.test(fleetMd + fleetState + agentsMd),
@@ -62,6 +64,9 @@ export async function auditFleet(target) {
     inboxRunbook: await exists(path.join(root, 'inbox-runbook.md')),
     auditRunbook: await exists(path.join(root, 'audit-runbook.md')),
     handoffSchema: await exists(path.join(root, 'agents/handoff-schema.json')),
+    schemaValid: validation.errors.length === 0 && validation.registryValid,
+    noShadowAgents: !validation.warnings.some((w) => w.startsWith('Shadow agent:')),
+    loopAligned: loopIssues.length === 0,
   };
 
   let score = 10;
@@ -88,7 +93,7 @@ export async function auditFleet(target) {
   } else findings.push({ level: 'warn', message: 'No agent manifests' });
 
   if (signals.permissions) { score += 10; findings.push({ level: 'ok', message: 'Permissions model documented' }); }
-  else findings.push({ level: 'warn', message: 'Permissions (clone/run/edit) not documented' });
+  else findings.push({ level: 'warn', message: 'Permissions (clone/run/edit) not documented on active agents' });
 
   if (signals.budget) { score += 10; findings.push({ level: 'ok', message: 'Fleet budget file present' }); }
   else findings.push({ level: 'warn', message: 'Missing fleet-budget.md' });
@@ -102,11 +107,50 @@ export async function auditFleet(target) {
   if (signals.patterns) { score += 6; findings.push({ level: 'ok', message: 'Fleet patterns registry present' }); }
   if (signals.auditWorkflow) { score += 5; findings.push({ level: 'ok', message: 'fleet-audit workflow (dogfood)' }); }
 
+  if (validation.registryValid) {
+    findings.push({ level: 'ok', message: 'Registry schema valid' });
+  }
+  if (validation.errors.length) {
+    score = Math.max(10, score - validation.errors.length * 5);
+    for (const err of validation.errors) findings.push({ level: 'fail', message: `Schema: ${err}` });
+  }
+  if (validation.warnings.some((w) => w.startsWith('Shadow agent:'))) {
+    score = Math.max(10, score - 8);
+    for (const w of validation.warnings.filter((x) => x.startsWith('Shadow agent:'))) {
+      findings.push({ level: 'fail', message: w });
+      recommendations.push(`Register shadow agent in agents/registry.yaml — ${w}`);
+    }
+  }
+  for (const w of validation.warnings.filter((x) => !x.startsWith('Shadow agent:'))) {
+    findings.push({ level: 'warn', message: w });
+  }
+  if (loopIssues.length) {
+    score = Math.max(10, score - loopIssues.length * 3);
+    for (const issue of loopIssues) {
+      findings.push({ level: 'warn', message: issue });
+      recommendations.push('Align LOOP.md with manifest loops: — see starters/fleet-plus-loop/');
+    }
+  } else if (Object.keys(validation.loopsByAgent).length && loopMd.length > 50) {
+    findings.push({ level: 'ok', message: 'Loop patterns aligned with manifests' });
+    score += 3;
+  }
+
   let level = 'F0';
   let assessment = 'Ad-hoc population — start with Team Agent Registry';
-  if (score >= 65) { level = 'F2'; assessment = 'Shared fleet posture — budgets and audit in place'; }
+  const f2Ready = score >= 65 && (signals.inboxRunbook || signals.auditRunbook);
+  if (f2Ready) { level = 'F2'; assessment = 'Shared fleet posture — budgets and audit in place'; }
   else if (score >= 40) { level = 'F1'; assessment = 'Cataloged — ready for inbox and budget enforcement'; }
   else if (score >= 25) { level = 'F0+'; assessment = 'Early — add FLEET.md and registry'; }
+
+  if (level === 'F2' && !signals.inboxRunbook) {
+    recommendations.push('npx @cobusgreyling/fleet-init . --pattern shared-inbox-hitl');
+  }
+  if (level === 'F2' && !signals.auditRunbook) {
+    recommendations.push('npx @cobusgreyling/fleet-init . --pattern cross-agent-audit');
+  }
+  if (level === 'F2' && !signals.handoffSchema && Object.values(validation.loopsByAgent).flat().length > 1) {
+    recommendations.push('npx @cobusgreyling/fleet-init . --pattern hierarchical-delegation');
+  }
 
   if (!signals.fleetMd) {
     recommendations.push('npx @cobusgreyling/fleet-init . --pattern team-agent-registry');
@@ -122,7 +166,20 @@ export async function auditFleet(target) {
   if (!signals.accountability) recommendations.push('See docs/accountability-test.md');
   if (score < 40) recommendations.push('See docs/fleet-design-checklist.md');
 
-  return { target: root, score: Math.min(score, 100), level, assessment, signals, findings, recommendations };
+  return {
+    target: root,
+    score: Math.min(score, 100),
+    level,
+    assessment,
+    signals,
+    findings,
+    recommendations: [...new Set(recommendations)],
+    validation: {
+      errors: validation.errors,
+      warnings: validation.warnings,
+      loopIssues,
+    },
+  };
 }
 
 export function formatHuman(result) {
@@ -148,5 +205,5 @@ export function formatSuggestions(result) {
   if (!result.recommendations.length) {
     return ['No scaffold actions needed — review docs/fleet-design-checklist.md for F2→F3'];
   }
-  return [...new Set(result.recommendations)];
+  return result.recommendations;
 }

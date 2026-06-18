@@ -2,8 +2,12 @@
 
 <p align="center">
   <a href="https://github.com/cobusgreyling/fleet-engineering/actions/workflows/audit.yml"><img src="https://img.shields.io/github/actions/workflow/status/cobusgreyling/fleet-engineering/audit.yml?label=fleet-audit%20dogfood" alt="fleet-audit dogfood"></a>
+  <a href="https://www.npmjs.com/package/@cobusgreyling/fleet-audit"><img src="https://img.shields.io/npm/v/@cobusgreyling/fleet-audit?label=fleet-audit" alt="fleet-audit npm"></a>
+  <a href="https://www.npmjs.com/package/@cobusgreyling/fleet-init"><img src="https://img.shields.io/npm/v/@cobusgreyling/fleet-init?label=fleet-init" alt="fleet-init npm"></a>
+  <a href="https://www.npmjs.com/package/@cobusgreyling/fleet-budget"><img src="https://img.shields.io/npm/v/@cobusgreyling/fleet-budget?label=fleet-budget" alt="fleet-budget npm"></a>
+  <a href="https://www.npmjs.com/package/@cobusgreyling/fleet-cost"><img src="https://img.shields.io/npm/v/@cobusgreyling/fleet-cost?label=fleet-cost" alt="fleet-cost npm"></a>
   <a href="https://github.com/cobusgreyling/fleet-engineering/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT"></a>
-  <a href="https://cobusgreyling.github.io/fleet-engineering/"><img src="https://img.shields.io/badge/GitHub_Pages-live-6366f1" alt="Pages"></a>
+  <a href="https://cobusgreyling.github.io/fleet-engineering/"><img src="https://img.shields.io/badge/GitHub_Pages-live%20%7C%20interactive-6366f1" alt="Pages"></a>
 </p>
 
 <p align="center">
@@ -53,7 +57,8 @@ Unsure? Use the [Pattern Picker](docs/pattern-picker.md).
 | [Accountability Test](docs/accountability-test.md) | The one-sentence standard for real fleets |
 | [Pattern Picker](docs/pattern-picker.md) | Which fleet pattern to adopt first |
 | [Failure Modes](docs/failure-modes.md) | Incident-style catalog |
-| [Primitives Matrix](docs/primitives-matrix.md) | LangSmith Fleet vs DIY vs OpenHermit |
+| [Primitives Matrix](docs/primitives-matrix.md) | DIY vs LangSmith vs Cursor vs Claude Code vs Grok |
+| [Fleet vs Frameworks](docs/fleet-vs-frameworks.md) | Governance vs LangGraph / CrewAI |
 | [Fleet Design Checklist](docs/fleet-design-checklist.md) | Ship readiness rubric (F0–F3) |
 | [Patterns](patterns/README.md) | 6 production fleet patterns |
 | [Starters](starters/) | Clone-and-run kits + GitHub template |
@@ -61,22 +66,26 @@ Unsure? Use the [Pattern Picker](docs/pattern-picker.md).
 | [fleet-audit](tools/fleet-audit/) | `npx @cobusgreyling/fleet-audit` |
 | [fleet-init](tools/fleet-init/) | `npx @cobusgreyling/fleet-init` |
 | [fleet-budget](tools/fleet-budget/) | `npx @cobusgreyling/fleet-budget` |
+| [fleet-cost](tools/fleet-cost/) | `npx @cobusgreyling/fleet-cost` |
 | [Stories](stories/) | Real wins and honest failures |
 
 ## Getting Started (5 minutes)
 
 ```bash
-# 1. Scaffold a minimal fleet workspace
-npx @cobusgreyling/fleet-init ~/my-fleet --pattern team-agent-registry
+# 1. Scaffold fleet + optional loop layer
+npx @cobusgreyling/fleet-init ~/my-fleet --pattern team-agent-registry --with-loop daily-triage
 
-# 2. Audit readiness
+# 2. Audit readiness (schema + shadow-agent checks)
 npx @cobusgreyling/fleet-audit ~/my-fleet --suggest
 
-# 3. Roll up token caps
+# 3. Roll up caps and attribute spend
 npx @cobusgreyling/fleet-budget ~/my-fleet
+npx @cobusgreyling/fleet-cost ~/my-fleet
 
-# 4. Start F1: registry + permissions doc only — no unattended autonomy
+# 4. Start F1: registry + permissions only — no unattended L2+ loops
 ```
+
+**GitHub template:** enable "Template repository" in repo settings, then [Use minimal-fleet template](https://github.com/cobusgreyling/fleet-engineering/generate).
 
 From a clone:
 

@@ -1,0 +1,30 @@
+id: validate-registry
+owner: maintainers
+version: 1.0.0
+description: Pattern registry schema validation in CI
+
+identity: claw
+
+permissions:
+  workspace_default: run
+  editors: [maintainers]
+
+loops: []
+
+autonomy_tier: F1
+status: active
+
+budget_daily_tokens: 0
+
+connectors:
+  - name: github-read
+    risk: read
+
+human_gates:
+  - schema-breaking-changes
+
+evidence:
+  trace_platform: diy
+  audit_export: scripts/validate-registry.mjs
+
+last_reviewed: 2026-06-18

@@ -1,6 +1,6 @@
 {
   "name": "@cobusgreyling/fleet-init",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Scaffold fleet engineering registry, manifests, and policy files",
   "type": "module",
   "bin": {

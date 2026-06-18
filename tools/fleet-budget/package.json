@@ -1,6 +1,6 @@
 {
   "name": "@cobusgreyling/fleet-budget",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Roll up per-agent token caps from fleet manifests",
   "type": "module",
   "bin": {

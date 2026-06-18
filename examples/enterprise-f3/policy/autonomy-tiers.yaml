@@ -1,0 +1,22 @@
+# Autonomy tiers by data class — enforce in CI and inbox
+
+tiers:
+  F1:
+    description: Cataloged; human approves all writes
+    allowed_loop_levels: [L0, L1]
+    unattended_writes: false
+
+  F2:
+    description: Shared fleet; inbox for risky tools
+    allowed_loop_levels: [L1, L2]
+    unattended_writes: internal-only
+
+  F3:
+    description: Enterprise; policy-as-code + attested rollback
+    allowed_loop_levels: [L2, L3]
+    unattended_writes: allowlisted-only
+
+mapping:
+  data_class_confidential: F1
+  data_class_internal: F2
+  data_class_public: F2

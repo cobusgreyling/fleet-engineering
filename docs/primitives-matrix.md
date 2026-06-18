@@ -2,23 +2,34 @@
 
 How fleet primitives map across platforms. Tool-agnostic discipline; vendor-specific cells.
 
-| Primitive | DIY (this repo) | LangSmith Fleet | OpenHermit | Notes |
-|-----------|-----------------|-----------------|------------|-------|
-| Registry | `FLEET-STATE.md` + `AGENT-MANIFEST.yaml` | Workspace agent list | `hermit` CLI + Postgres | |
-| Identity | manifest `identity: claw\|assistant` | Claw vs Assistant model | Per-agent Docker + creds | |
-| Permissions | `permissions-model.yaml` | clone / run / edit | CLI `--all` skills ops | |
-| Inbox | GitHub Issues / manual | Fleet Inbox | Web UI | |
-| Audit | git + CI logs; optional LangSmith | Native tracing | Session logs | |
-| Economics | `fleet-budget.md` | Platform metering (varies) | Per-deployment limits | |
-| Sovereign control | `FLEET.md` kill section | Admin controls | `hermit` pause | |
+| Primitive | DIY (this repo) | LangSmith Fleet | OpenHermit | Cursor | Claude Code | Codex / Copilot | Grok |
+|-----------|-----------------|-----------------|------------|--------|-------------|-----------------|------|
+| Registry | `FLEET-STATE.md` + manifests | Workspace agent list | `hermit` CLI + Postgres | `.cursor/rules`, project docs | `CLAUDE.md`, agents | Workspace agents | Scheduled tasks + MCP |
+| Identity | manifest `claw\|assistant` | Claw vs Assistant | Per-agent Docker + creds | User session | User session | User / service | User / API key |
+| Permissions | `permissions-model.yaml` | clone / run / edit | CLI skills ops | Team rules (manual) | Project scope | Org policy | Connector scopes |
+| Inbox | GitHub Issues / manual | Fleet Inbox | Web UI | Not native — DIY | Not native — DIY | PR review | Not native — DIY |
+| Audit | git + CI; LangSmith optional | Native tracing | Session logs | Local history | Session logs | GH Actions logs | Run history |
+| Economics | `fleet-budget` + `fleet-cost` | Platform metering | Per-deployment | Usage dashboard | API billing | Copilot metrics | Token dashboard |
+| Sovereign control | `FLEET_PAUSE_ALL` in FLEET.md | Admin controls | `hermit pause` | Disable rules | Pause automations | Disable workflows | Pause schedules |
 
 ## When to use what
 
 | Situation | Start with |
 |-----------|------------|
 | Enterprise, mixed builders | LangSmith Fleet + this repo's checklists |
-| Self-hosted, eng team | DIY templates + loop-engineering |
-| Personal agent farm | OpenHermit / SwarmClaw + F1 registry |
+| Self-hosted eng team | DIY templates + loop-engineering |
+| IDE-native agents (Cursor, Claude Code) | F1 registry in git + permissions doc |
+| Personal agent farm | OpenHermit + F1 registry |
+| GitHub-centric (Codex, Copilot) | Registry + CI audit workflow |
+
+## Not native? Use DIY artifact
+
+| Platform gap | Fleet engineering fill-in |
+|--------------|----------------------------|
+| No team registry | `agents/registry.yaml` + `fleet-init` |
+| No shared inbox | `inbox-runbook.md` + GitHub Issues label |
+| No cross-agent audit | `audit-runbook.md` + `fleet-run-log.jsonl` |
+| No per-agent caps | `fleet-budget.md` + manifest `budget_daily_tokens` |
 
 ## LangSmith Fleet mapping
 
@@ -40,8 +51,10 @@ FLEET.md
 FLEET-STATE.md
 agents/registry.yaml
 agents/manifests/*.yaml
-templates/permissions-model.yaml
-templates/fleet-budget.md
+permissions-model.yaml
+fleet-budget.md
 ```
 
-No platform required — but you must enforce permissions and inbox manually until F2.
+No platform required — enforce permissions and inbox manually until F2.
+
+See also: [fleet-vs-frameworks.md](./fleet-vs-frameworks.md)

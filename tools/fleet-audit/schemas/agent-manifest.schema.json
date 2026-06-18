@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/cobusgreyling/fleet-engineering/schemas/agent-manifest.schema.json",
+  "title": "AgentManifest",
+  "type": "object",
+  "required": ["id", "owner", "version", "identity", "autonomy_tier", "status"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "owner": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "description": { "type": "string" },
+    "identity": { "enum": ["claw", "assistant"] },
+    "permissions": { "type": "object" },
+    "loops": { "type": "array", "items": { "type": "string" } },
+    "autonomy_tier": { "enum": ["F0", "F1", "F2", "F3"] },
+    "status": { "enum": ["active", "paused", "retired", "experimental"] },
+    "budget_daily_tokens": { "type": "number", "minimum": 0 },
+    "connectors": { "type": "array" },
+    "human_gates": { "type": "array", "items": { "type": "string" } },
+    "forked_from": { "type": "string" },
+    "evidence": { "type": "object" },
+    "last_reviewed": { "type": "string" }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,12 @@
+agents:
+  - id: triage-agent
+    manifest: agents/manifests/triage-agent.yaml
+    owner: platform
+    status: active
+    pattern: shared-inbox-hitl
+
+  - id: report-agent
+    manifest: agents/manifests/report-agent.yaml
+    owner: analytics
+    status: active
+    pattern: fleet-budget-guard
