@@ -1,0 +1,31 @@
+{
+  "name": "@cobusgreyling/fleet-mcp",
+  "version": "0.3.0",
+  "description": "Centralized Resource Lookup MCP server: ephemeral, role-scoped credentials and budgets for a fleet of agents",
+  "type": "module",
+  "bin": {
+    "fleet-mcp": "./server.js"
+  },
+  "files": ["server.js", "allocate.js", "registry.json", "README.md"],
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/allocate.test.mjs"
+  },
+  "keywords": ["fleet-engineering", "ai-agents", "mcp", "model-context-protocol", "credentials", "budget"],
+  "author": "Cobus Greyling",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cobusgreyling/fleet-engineering.git",
+    "directory": "tools/fleet-mcp"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

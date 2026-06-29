@@ -16,11 +16,12 @@
     "test:fleet-audit": "cd tools/fleet-audit && npm install && npm test",
     "test:fleet-budget": "cd tools/fleet-budget && npm test",
     "test:fleet-cost": "cd tools/fleet-cost && npm test",
+    "test:fleet-mcp": "cd tools/fleet-mcp && node --test test/allocate.test.mjs",
     "test:fixtures": "node scripts/test-fixtures.mjs",
     "test:examples": "node tools/fleet-audit/cli.js examples/e2e-f2 --min-score=55",
     "demo:diy": "bash examples/diy/demo.sh",
     "bundle:init": "node scripts/bundle-fleet-init.mjs",
-    "test": "npm run test:fleet-audit && npm run test:fleet-budget && npm run test:fleet-cost && npm run test:fixtures && npm run test:examples"
+    "test": "npm run test:fleet-audit && npm run test:fleet-budget && npm run test:fleet-cost && npm run test:fleet-mcp && npm run test:fixtures && npm run test:examples"
   },
   "license": "MIT",
   "repository": {

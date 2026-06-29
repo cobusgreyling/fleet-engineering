@@ -20,6 +20,7 @@ Each pattern answers:
 | Agent Clone & Fork | 1 → many | Low | [agent-clone-fork.md](./agent-clone-fork.md) |
 | Fleet Budget Guard | any active | Low | [fleet-budget-guard.md](./fleet-budget-guard.md) |
 | Cross-Agent Audit | compliance | Low | [cross-agent-audit.md](./cross-agent-audit.md) |
+| MCP Resource Lookup | 5+ agents | Medium | [mcp-resource-lookup.md](./mcp-resource-lookup.md) |
 
 Machine-readable index: [registry.yaml](./registry.yaml)
 

@@ -78,3 +78,16 @@ patterns:
     week_one_mode: F1
     starter: starters/minimal-fleet
     human_gates: [retention-policy, export-requests]
+
+  - id: mcp-resource-lookup
+    name: MCP Resource Lookup
+    file: mcp-resource-lookup.md
+    goal: Centralized, per-agent ephemeral credentials and budgets over MCP
+    scale: 5+ agents or any unattended writes
+    risk: medium
+    platforms: [diy, mcp]
+    artifacts: [tools/fleet-mcp, registry.json, starters/fleet-mcp-bootstrap]
+    concerns: [identity, permissions, economics, sovereign-control]
+    week_one_mode: F2
+    starter: starters/fleet-mcp-bootstrap
+    human_gates: [new-role, budget-cap-raise, write-permission-grant, secrets-backend-swap]

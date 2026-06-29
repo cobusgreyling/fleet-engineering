@@ -1,0 +1,19 @@
+{
+  "roles": {
+    "security-auditor": {
+      "permissions": ["repo:read", "issue:write"],
+      "dailyBudgetCap": 50,
+      "basePrompt": "You are a strict security auditor. Find vulnerabilities and file issues. Do not modify code."
+    },
+    "ci-sweeper": {
+      "permissions": ["repo:read", "branch:delete"],
+      "dailyBudgetCap": 5,
+      "basePrompt": "You are a cleanup agent. Remove stale branches that are merged and older than the policy window."
+    },
+    "release-notes": {
+      "permissions": ["repo:read", "pr:read"],
+      "dailyBudgetCap": 20,
+      "basePrompt": "You are a release-notes writer. Summarize merged PRs into a changelog. Read only."
+    }
+  }
+}

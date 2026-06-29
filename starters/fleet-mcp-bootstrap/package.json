@@ -1,0 +1,18 @@
+{
+  "name": "fleet-mcp-bootstrap",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Starter: a fleet agent that requests ephemeral credentials from the Fleet Resource Manager over MCP",
+  "type": "module",
+  "scripts": {
+    "start": "node agent-runner.js",
+    "demo": "node agent-runner.js agent-007 security-auditor"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}
