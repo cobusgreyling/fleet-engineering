@@ -14,7 +14,16 @@
   <img src="assets/visuals/fe.png" alt="Fleet Engineering — Govern populations of agents with accountability" width="100%" />
 </p>
 
+> **You don’t have an agent problem. You have a population problem. Get a Fleet Ready score.**
+
 **Fleet engineering is replacing ad-hoc populations of agents with an accountable organization. You design the registry, identity, permissions, inbox, audit trail, and sovereign control that let many loops run safely across a team.**
+
+```bash
+npx @cobusgreyling/fleet-init .
+npx @cobusgreyling/fleet-audit . --suggest
+# Optional: attach a loop layer
+npx @cobusgreyling/fleet-init . --with-loop daily-triage
+```
 
 A fleet is not "many agents." A fleet is a **governed population** where every action answers one sentence:
 
@@ -22,6 +31,8 @@ A fleet is not "many agents." A fleet is a **governed population** where every a
 
 <p align="center">
   <strong><a href="https://cobusgreyling.github.io/fleet-engineering/">→ cobusgreyling.github.io/fleet-engineering</a></strong>
+  <br>
+  <strong><a href="docs/fleet-ready-score.md">→ Fleet Ready Score (F0–F3)</a></strong>
   <br>
   <strong><a href="https://cobusgreyling.substack.com/">→ Fleet Engineering essay on Substack</a></strong>
 </p>
@@ -51,6 +62,8 @@ Unsure? Use the [Pattern Picker](docs/pattern-picker.md).
 
 | Start here | Description |
 |------------|-------------|
+| [**Fleet Ready Score**](docs/fleet-ready-score.md) | F0–F3 scoring contract (`fleet-audit`) — same ritual as Loop Ready |
+| [**Relaunch playbook**](docs/LAUNCH.md) | Growth pack: positioning, 7-day ship plan, metrics |
 | [Concepts](docs/concepts.md) | Fleet vs loop vs harness — **read this first** |
 | [Assistant vs Claw](https://github.com/cobusgreyling/assistant-vs-claw) | Runnable identity models (on-behalf-of vs fixed credentials) |
 | [Maturity Model](docs/maturity-model.md) | F0–F3 phased rollout |
